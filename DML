@@ -1,0 +1,31 @@
+1.Open terminal, type command hive
+
+2. Enter following in hive 
+SET hive.support.concurrency=true;
+SET hive.txn.manager=org.apache.hadoop.hive.ql.lockmgr.DbTxnManager;
+SET hive.enforce.bucketing=true;
+SET hive.exec.dynamic.partition.mode=nostrict;
+SET hive.compactor.initiator.on=true;
+SET hive.compactor.worker.threads=1;
+
+3. Create the following table in hive prompt
+CREATE TABLE student_table (rollno int, name string,cgpa float)
+PARTITIONED BY (admission_date date)
+CLUSTERED BY(rollno) INTO 3 BUCKETS
+STORED AS ORC TBLPROPERTIES ('transactional'='true');
+
+4. Insert values into the table created
+INSERT INTO student_table partition (admission_date='2020-04-01')
+VALUES (120, 'sreedhar',9.8);
+INSERT INTO student_table partition (admission_date='2020-04-02')
+VALUES (121, 'sree',9.6);
+INSERT INTO student_table partition (admission_date='2020-04-03')
+VALUES (122, 'chowdam',9.2);
+INSERT INTO student_table partition (admission_date='2020-04-04')
+VALUES (123, 'sreedharc',8.8);
+
+5. Update the table using the following
+update student_table set cgpa=10 where rollno = 123;
+
+6. Delete 
+DELETE FROM student_table WHERE rollno = 123;
